@@ -6,9 +6,9 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.neighbors import KNeighborsRegressor
 import xgboost as xgb
 
-from src.models.models_keras import *
-from src.models.models_baseline import *
-from src.models.models_time_series import *
+from autoforecast.models.neural_net import *
+from autoforecast.models.naive import *
+from autoforecast.models.time_series import *
 
 
 def get_dict_models(train):
@@ -30,7 +30,7 @@ def get_dict_models(train):
         'MLPRegressor': MLPRegressor(),
         'KNeighborsRegressor': KNeighborsRegressor(),
         'ARMA': ARMA(),
-        'BaselineLastYear': BaselineLastYear(),
+        #'BaselineLastYear': BaselineLastYear(),
         'BaselineLastValue': BaselineLastValue(),
         'BaselineMean': BaselineMean(),
         'BaselineMedian': BaselineMedian(),

@@ -21,7 +21,8 @@ class BaseKeras():
         self.model = self.keras_model(self.n_input, self.n_features)
         self.model.fit(self.X_train, self.y_train, epochs=10, validation_split=0.1, verbose=0)
 
-    def predict(self, *args):
+    def predict(self, X_test, *args):
+        self.n_input = len(X_test)
         pred_list = self.predict_by_batch(
             self.model, self.X_train, self.n_input, self.n_features, self.scaler)
         return pred_list
