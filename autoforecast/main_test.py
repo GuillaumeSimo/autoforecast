@@ -1,6 +1,6 @@
-from src.data.import_bitcoin_price import get_price_for_last_n_days
-from src.models.models_baseline import BaselineMean
-from src.utils.metrics import get_metrics
+from autoforecast.src.data.import_bitcoin_price import get_price_for_last_n_days
+from autoforecast.src.models.models_baseline import BaselineMean
+from autoforecast.src.utils.metrics import get_metrics
 
 df_price = get_price_for_last_n_days(n=30, type='spot', currency_pair='BTC-USD')
 print(df_price)
