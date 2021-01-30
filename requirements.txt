@@ -1,4 +1,4 @@
-aiohttp==3.6.2
+aiohttp==3.7.3
 fbprophet==0.7.1
 Keras==2.4.3
 numpy==1.19.4
