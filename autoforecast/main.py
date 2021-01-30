@@ -4,8 +4,8 @@ import pandas as pd
 import time 
 import math
 
-from src.utils.utils import *
-from src.models.models import get_dict_models
+from autoforecast.src.utils.utils import *
+from autoforecast.src.models.models import get_dict_models
 
 
 class AutoForecast():
