@@ -3,32 +3,32 @@ AutoML library for time series forecasting
 
 ## Getting started
 
-Install virtualenv
-```bash
-$ pip install virtualenv
-```
-
-Create a virtualenv named venv
-```bash
-$ virtualenv venv
-```
-
-Activate the virtualenv venv
-```bash
-$ source venv/bin/activate
-```
-
 Upgrade pip
 ```bash
 $ pip install pip --upgrade
 ```
 
-Install the requirements
+Install autoforecast
 ```bash
-$ pip install -r requirements.txt
+$ pip install autoforecast
 ```
 
-Run the main.py file
-```bash
-$ python3 main.py
+
+### Run the example function
+```python
+from autoforecast.examples import autoforecast_bitcoin
+
+
+res = autoforecast_bitcoin.run()
+print(res)
+```
+
+### Use you own dataset
+```python
+from autoforecast.automl import AutoForecast
+
+res_auto_forecast = AutoForecast(train).run_auto_forecast(
+    X_train, y_train, X_test, y_test,
+    verbose=False, max_time_in_sec=600
+)
 ```
