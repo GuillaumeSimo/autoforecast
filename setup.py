@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="autoforecast", # Replace with your own username
-    version="0.0.1",
+    version="0.0.3",
     author="Guillaume Simo",
     author_email="guillaume.simo@hotmail.fr",
     description="AutoML time series forecasting",
