@@ -23,14 +23,6 @@ def get_metrics(y_pred, y_test):
     return {'mse': mse, 'rmse': rmse, 'rmsle': rmsle, 'mape': mape, 'mae': mae}
 
 
-def get_company_heading_data(df, company_id, heading_id):
-    df = df[
-        (df['heading_id'] == heading_id)
-        &
-        (df['company_id'] == company_id)]
-    return df
-
-
 def split_n_last_timestep(df, n=12):
     train, test = df.iloc[:-n], df.iloc[-n:]
     return train, test
