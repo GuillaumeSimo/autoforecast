@@ -50,21 +50,3 @@ def train_test_split(df):
     df_ = df.copy()
     train, test = split_n_last_timestep(df, n=12)
     return train, test
-
-
-def plot_pred(pred_list, df, future_dates=None):
-    if future_dates is None:
-        df_predict = pd.DataFrame(pred_list,
-                                  index=df[-N_INPUT:].index, columns=['Prediction'])
-    else:
-        df_predict = pd.DataFrame(pred_list,
-                                  index=future_dates[-N_INPUT:].index, columns=['Prediction'])
-
-    df_test = pd.concat([df,df_predict], axis=1)
-    plt.figure(figsize=(20, 5))
-    plt.plot(df_test.index, df_test['target'])
-    plt.plot(df_test.index, df_test['Prediction'], color='r')
-    plt.legend(loc='best', fontsize='xx-large')
-    plt.xticks(fontsize=18)
-    plt.yticks(fontsize=16)
-    plt.show()

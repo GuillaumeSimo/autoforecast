@@ -11,9 +11,6 @@ fig.add_trace(go.Scatter(x=x_2019, y=train_2018_['target'], name='2018'))
 fig.add_trace(go.Scatter(x=x_2019, y=train_2017_['target'], name='2017'))
 fig.add_trace(go.Scatter(x=x_2019, y=train_2016_['target'], name='2016'))
 fig.add_trace(go.Scatter(x=x_2019, y=pred, name='pred'))
-title = (
-    """" my title """"
-    
-)
+title = 'my title'
 print(title)
 fig.show()
