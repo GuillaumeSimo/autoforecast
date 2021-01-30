@@ -11,7 +11,7 @@ setuptools.setup(
     description="AutoML time series forecasting",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/GuillaumeSimo/autoforecast",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
