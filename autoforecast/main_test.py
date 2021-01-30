@@ -26,7 +26,7 @@ res_auto_forecast = AutoForecast(train).run_auto_forecast(
 print(res_auto_forecast)
 
 
-#model = BaselineMean()
+model = BaselineMean()
 model.fit(X_train=X_train, y_train=y_train)
 
 y_pred = model.predict(X_test=X_test)
