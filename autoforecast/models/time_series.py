@@ -16,8 +16,10 @@ class ARMA():
         )
         self.order = self.best_order(aic_matrix)
 
-    def predict(self, *arg):
-        y_pred = self.predict_arma(y_train=self.y_train , order=self.order)
+    def predict(self, X_test, *arg):
+        y_pred = self.predict_arma(
+            y_train=self.y_train, nforecast=len(X_test), order=self.order
+        )
         return y_pred
     
     @staticmethod
@@ -49,11 +51,10 @@ class ARMA():
         return (min_row_idx, 0, min_col_idx)
 
     @staticmethod
-    def predict_arma(y_train: np.ndarray, order=(1, 0, 1)):
+    def predict_arma(y_train: np.ndarray, nforecast: int, order=(1, 0, 1)):
         mod = sm.tsa.statespace.SARIMAX(y_train, order=order)
         res = mod.fit(disp=False)
         # In-sample one-step-ahead predictions, and out-of-sample forecasts
-        nforecast = 12
         predict = res.get_prediction(end=mod.nobs + nforecast)
         y_pred = predict.predicted_mean[-nforecast:]
         return np.array(y_pred)
@@ -73,6 +74,7 @@ class Prophet():
         self.model.fit(df)
 
     def predict(self, X_test):
+        self.period = len(X_test)
         future = self.model.make_future_dataframe(periods=self.period, freq='M')
         forecast = self.model.predict(future)
         y_pred = forecast.yhat[-self.period:]

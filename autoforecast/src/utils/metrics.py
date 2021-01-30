@@ -1,7 +1,5 @@
 import numpy as np
-from sklearn.metrics import (
-    mean_absolute_error, mean_absolute_percentage_error, mean_squared_error
-)
+import sklearn.metrics
 
 
 def encode(data, col='bank'):
