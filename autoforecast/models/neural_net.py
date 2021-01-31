@@ -1,30 +1,33 @@
 # Forecasting/autoforecast/src/models/keras_models.py
 import numpy as np
-from keras import Model
+from keras import Model, models
 from keras.layers import Dense, LSTM, Embedding, Input
 from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 
+from autoforecast.models.hyperparameters import HyperparametersTuner
+from autoforecast.configs.configspace.neural_net_space import (
+    base_keras_x0, base_keras_space, lstm_keras_x0, lstm_keras_space
+)
+from autoforecast import metrics
+
 
 class BaseKeras():
-    def __init__(self, train, n_input=12, n_features=1):
-        self.scaler = MinMaxScaler()
-        self.scaler.fit(train.target.values.reshape(-1, 1))
-        train['target_scaled'] = self.scaler.transform(train.target.values.reshape(-1, 1))
-        self.y_train = train['target_scaled'].values
+    def __init__(self, n_input=12, n_features=1):
         self.n_input = n_input
         self.n_features = 1
-        self.X_train = np.array([self.y_train[i:i+self.n_input] for i in range(len(self.y_train)-self.n_input)])
-        self.y_train = np.array([self.y_train[i+1:i+self.n_input+1] for i in range(len(self.y_train)-self.n_input)])
 
-    def fit(self, *args):
-        self.model = self.keras_model(self.n_input, self.n_features)
+    def fit(self, X_train, y_train, **params):
+        self.X_train = np.array([y_train[i:i+self.n_input] for i in range(len(y_train)-self.n_input)])
+        self.y_train = np.array([y_train[i+1:i+self.n_input+1] for i in range(len(y_train)-self.n_input)])
+
+        self.model = self.keras_model(self.n_input, self.n_features, **params)
         self.model.fit(self.X_train, self.y_train, epochs=10, validation_split=0.1, verbose=0)
 
     def predict(self, X_test, *args):
         self.n_input = len(X_test)
         pred_list = self.predict_by_batch(
-            self.model, self.X_train, self.n_input, self.n_features, self.scaler)
+            self.model, self.X_train, self.n_input, self.n_features)
         return pred_list
 
     @staticmethod
@@ -42,22 +45,40 @@ class BaseKeras():
         return model
 
     @staticmethod
-    def predict_by_batch(model, X_train, n_input, n_features, scaler):
+    def predict_by_batch(model, X_train, n_input, n_features):
         pred_list = []
         batch = X_train[-1].reshape(-1, 1)
         for i in range(n_input):  
             pred_list.append(model.predict(batch)[0]) 
             batch = np.append(batch[1:], pred_list[i].reshape(-1, 1), axis=0)
         pred_list = np.concatenate([i for i in pred_list]).reshape(-1, 1)
-        return np.concatenate(scaler.inverse_transform(pred_list))
+        return np.concatenate(pred_list)
+
+    def optimize(
+        self,
+        X_train,
+        X_test,
+        y_train,
+        y_test
+    ):
+        return HyperparametersTuner(
+            model=BaseKeras,
+            search_space=base_keras_space,
+            x0=base_keras_x0,
+            metric=metrics.smape_score,
+            X_train=X_train,
+            X_test=X_test,
+            y_train=y_train,
+            y_test=y_test
+        )()
 
 
 class LSTMKeras(BaseKeras):
-    def __init__(self, train):
-        return super().__init__(train=train)
+    def __init__(self):
+        return super().__init__()
 
-    def fit(self, *args):
-        return super().fit(*args)
+    def fit(self, X_train, y_train):
+        return super().fit(X_train, y_train)
 
     def predict(self, *args):
         return super().predict(*args)
@@ -75,3 +96,21 @@ class LSTMKeras(BaseKeras):
             optimizer=optimizer
         )
         return model
+
+    def optimize(
+        self,
+        X_train,
+        X_test,
+        y_train,
+        y_test
+    ):
+        return HyperparametersTuner(
+            model=LSTMKeras,
+            search_space=lstm_keras_space,
+            x0=lstm_keras_x0,
+            metric=metrics.smape_score,
+            X_train=X_train,
+            X_test=X_test,
+            y_train=y_train,
+            y_test=y_test
+        )()

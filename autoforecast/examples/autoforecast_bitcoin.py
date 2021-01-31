@@ -3,14 +3,14 @@ from autoforecast.automl import AutoForecast
 from autoforecast.datasets.import_bitcoin_price import get_price_for_last_n_days
 
 
-def run(verbose: bool):
+def run(verbose: bool = False):
     # settings
     # lists of features name
     list_cat_feat = ['timestamp']
     # lists of features name tokenized
     list_num_feat = []
 
-    df_price = get_price_for_last_n_days(n=120, type='spot', currency_pair='BTC-USD')
+    df_price = get_price_for_last_n_days(n=30, type='spot', currency_pair='BTC-USD')
     df_price = df_price.rename(columns={'price': 'target'})
     print(df_price)
 

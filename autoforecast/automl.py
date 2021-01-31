@@ -40,9 +40,22 @@ class AutoForecast():
         dict_metrics = {}
         dict_pred = {}
         for model_str, model in tqdm(self.dict_models.items()):
-
+            print(model_str)
             model = model
-            model.fit(X_train, y_train)
+            best_param = {}
+            try:
+                print("start optimize hyperparameters")
+                res_opt, best_param = model.optimize(
+                    X_train=X_train,
+                    X_test=X_test,
+                    y_train=y_train,
+                    y_test=y_test
+                )
+                print(res_opt)
+                print(best_param)
+            except:
+                pass
+            model.fit(X_train, y_train, **best_param)
             y_pred = model.predict(X_test)
             dict_pred[model_str] = y_pred
             if verbose:

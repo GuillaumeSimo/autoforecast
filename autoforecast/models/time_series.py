@@ -33,7 +33,7 @@ class ARMA():
                 # Estimate the model with no missing datapoints
                 mod = sm.tsa.statespace.SARIMAX(y_train, order=(p,0,q), enforce_invertibility=False)
                 try:
-                    res = mod.fit(disp=False)
+                    res = mod.fit(disp=False, maxiter=200)
                     aic_full.iloc[p,q] = res.aic
                 except:
                     aic_full.iloc[p,q] = np.nan
