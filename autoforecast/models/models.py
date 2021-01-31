@@ -13,8 +13,8 @@ from autoforecast.models.time_series import *
 
 def get_dict_models(train):
     dict_models = {
-        'LSTMKeras': LSTMKeras(train=train),
-        'BaseKeras': BaseKeras(train=train),
+        'BaseKeras': BaseKeras(),
+        'LSTMKeras': LSTMKeras(),
         'XGBRegressor': xgb.XGBRegressor(),
         'RandomForestRegressor': RandomForestRegressor(),
         'GradientBoostingRegressor': GradientBoostingRegressor(),

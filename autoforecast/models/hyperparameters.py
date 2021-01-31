@@ -10,22 +10,26 @@ class HyperparametersTuner():
         model: Callable,
         search_space: list,
         x0: list,
-        metric: Callable
+        metric: Callable,
+        X_train,
+        X_test,
+        y_train,
+        y_test,
     ):
         self.model = model
         self.search_space = search_space
         self.x0 = x0
         self.metric = metric
+        self.X_train = X_train
+        self.X_test = X_test
+        self.y_train = y_train
+        self.y_test = y_test
 
     def __call__(self):
         return self.optimize()
 
     def optimize(
         self,
-        X_train,
-        X_test,
-        y_train,
-        y_test,
         n_calls: int = 10,
         n_random_starts: int = 3,
         random_state: int = 666
@@ -36,12 +40,12 @@ class HyperparametersTuner():
         @use_named_args(dimensions=dimensions)
         def fitness(**params):
             print(f'params={params}')
-            model = self.model(**params)
-            model.fit(X_train, y_train, params)
+            model = self.model()
+            model.fit(self.X_train, self.y_train, **params)
 
-            y_pred = model.predict(X_test)
-            metric_value = self.metric(y_test, y_pred)
-            return -1.0 * metric_value
+            y_pred = model.predict(self.X_test)
+            metric_value = self.metric(self.y_test, y_pred)
+            return metric_value
 
         res = gp_minimize(func=fitness,
                           dimensions=dimensions,
@@ -51,4 +55,6 @@ class HyperparametersTuner():
                           n_random_starts=n_random_starts,
                           random_state=random_state)
         print(f'best accuracy={-1.0 * res.fun} with {res.x}')
-        return res
+        param_name = [space.name for space in self.search_space]
+        best_params = dict(zip(param_name, res.x))
+        return res, best_params
