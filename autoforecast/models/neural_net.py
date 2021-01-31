@@ -1,9 +1,20 @@
 # Forecasting/autoforecast/src/models/keras_models.py
 import numpy as np
-from keras import Model
+from keras import Model, models
 from keras.layers import Dense, LSTM, Embedding, Input
 from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
+
+from autoforecast.models.hyperparameters import HyperparametersTuner
+
+
+class BaseTuner():
+    def __init__(self):
+        pass
+
+    def optimize(self):
+        res = HyperparametersTuner()
+        return res
 
 
 class BaseKeras():
