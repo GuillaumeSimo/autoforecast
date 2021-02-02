@@ -6,6 +6,9 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.neighbors import KNeighborsRegressor
 import xgboost as xgb
 
+from autoforecast.models.hyperparameters import HyperparametersTuner
+from autoforecast import metrics
+
 
 class BaseMLRegressor():
     def __init__(self):
@@ -25,12 +28,13 @@ class BaseMLRegressor():
         y_test
     ):
         return HyperparametersTuner(
-            model=LSTMKeras,
-            search_space=lstm_keras_space,
-            x0=lstm_keras_x0,
+            model=None,
+            search_space=None,
+            x0=None,
             metric=metrics.smape_score,
             X_train=X_train,
             X_test=X_test,
             y_train=y_train,
             y_test=y_test
         )()
+    
