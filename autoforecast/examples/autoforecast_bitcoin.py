@@ -26,7 +26,7 @@ def run(verbose: bool = False):
     y_test = test['target'].values
 
     # main.py
-    res_auto_forecast = AutoForecast(train).run_auto_forecast(
+    res_auto_forecast = AutoForecast().run_auto_forecast(
         X_train, y_train, X_test, y_test,
         verbose=verbose, max_time_in_sec=600
     )

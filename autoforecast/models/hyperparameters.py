@@ -45,6 +45,7 @@ class HyperparametersTuner():
 
             y_pred = model.predict(self.X_test)
             metric_value = self.metric(self.y_test, y_pred)
+            print(f'metric_value={metric_value}')
             return metric_value
 
         res = gp_minimize(func=fitness,
