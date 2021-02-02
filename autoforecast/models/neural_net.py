@@ -77,8 +77,8 @@ class LSTMKeras(BaseKeras):
     def __init__(self):
         return super().__init__()
 
-    def fit(self, X_train, y_train):
-        return super().fit(X_train, y_train)
+    def fit(self, X_train, y_train, **params):
+        return super().fit(X_train, y_train, **params)
 
     def predict(self, *args):
         return super().predict(*args)

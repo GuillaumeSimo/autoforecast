@@ -11,7 +11,7 @@ from autoforecast.models.naive import *
 from autoforecast.models.time_series import *
 
 
-def get_dict_models(train):
+def get_dict_models():
     dict_models = {
         'BaseKeras': BaseKeras(),
         'LSTMKeras': LSTMKeras(),
@@ -34,6 +34,6 @@ def get_dict_models(train):
         'BaselineLastValue': BaselineLastValue(),
         'BaselineMean': BaselineMean(),
         'BaselineMedian': BaselineMedian(),
-        'Prophet': Prophet(train=train),
+        'Prophet': Prophet(),
     }
     return dict_models
