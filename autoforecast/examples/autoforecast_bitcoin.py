@@ -1,6 +1,7 @@
 # Forecasting/autoforecast/main.py
 from autoforecast.automl import AutoForecast
 from autoforecast.datasets.import_bitcoin_price import get_price_for_last_n_days
+from autoforecast.src.utils.logger import LOG
 
 
 def run(verbose: bool = False):
@@ -12,12 +13,12 @@ def run(verbose: bool = False):
 
     df_price = get_price_for_last_n_days(n=30, type='spot', currency_pair='BTC-USD')
     df_price = df_price.rename(columns={'price': 'target'})
-    print(df_price)
+    LOG.info(df_price)
 
     ind_cutoff = int(df_price.shape[0]* 0.8)
     train = df_price.iloc[:ind_cutoff]
     test = df_price.iloc[ind_cutoff:]
-    print(train.shape, test.shape)
+    LOG.info(f'{train.shape} {test.shape}')
 
     cols = list_cat_feat + list_num_feat
     X_train = train[cols].values
