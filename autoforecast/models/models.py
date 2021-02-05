@@ -11,10 +11,10 @@ from autoforecast.models.naive import *
 from autoforecast.models.time_series import *
 
 
-def get_dict_models(train):
+def get_dict_models():
     dict_models = {
-        'LSTMKeras': LSTMKeras(train=train),
-        'BaseKeras': BaseKeras(train=train),
+        'BaseKeras': BaseKeras(),
+        'LSTMKeras': LSTMKeras(),
         'XGBRegressor': xgb.XGBRegressor(),
         'RandomForestRegressor': RandomForestRegressor(),
         'GradientBoostingRegressor': GradientBoostingRegressor(),
@@ -34,6 +34,6 @@ def get_dict_models(train):
         'BaselineLastValue': BaselineLastValue(),
         'BaselineMean': BaselineMean(),
         'BaselineMedian': BaselineMedian(),
-        'Prophet': Prophet(train=train),
+        'Prophet': Prophet(),
     }
     return dict_models

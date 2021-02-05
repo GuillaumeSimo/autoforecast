@@ -1,8 +1,15 @@
 # Forecasting/autoforecast/src/models/time_series_models.py
+import datetime
 import numpy as np
 import pandas as pd
 import fbprophet
 import statsmodels.api as sm
+
+from autoforecast.models.hyperparameters import HyperparametersTuner
+from autoforecast.configs.configspace.time_series_space import (
+    prophet_x0, prophet_space
+)
+from autoforecast import metrics
 
 
 class ARMA():
@@ -12,7 +19,8 @@ class ARMA():
     def fit(self, X_train, y_train):
         self.y_train = y_train
         aic_matrix = self.build_aic(
-            y_train=self.y_train, p_max=6, q_max=6, p_min=0, q_min=0
+            y_train=self.y_train, X_train=X_train,
+            p_max=6, q_max=6, p_min=0, q_min=0
         )
         self.order = self.best_order(aic_matrix)
 
@@ -23,7 +31,10 @@ class ARMA():
         return y_pred
     
     @staticmethod
-    def build_aic(y_train: np.ndarray, p_max=6, q_max=6, p_min=0, q_min=0):
+    def build_aic(
+        y_train: np.ndarray, X_train: np.ndarray,
+        p_max=6, q_max=6, p_min=0, q_min=0
+    ):
         aic_full = pd.DataFrame(np.zeros((6,6), dtype=float))
         # Iterate over all ARMA(p,q) models with p,q in [0,6]
         for p in range(6):
@@ -31,9 +42,9 @@ class ARMA():
                 if p == 0 and q == 0:
                     continue
                 # Estimate the model with no missing datapoints
-                mod = sm.tsa.statespace.SARIMAX(y_train, order=(p,0,q), enforce_invertibility=False)
+                mod = sm.tsa.statespace.SARIMAX(y_train, exog=X_train, order=(p,0,q), enforce_invertibility=False)
                 try:
-                    res = mod.fit(disp=False)
+                    res = mod.fit(disp=False, maxiter=200)
                     aic_full.iloc[p,q] = res.aic
                 except:
                     aic_full.iloc[p,q] = np.nan
@@ -61,16 +72,16 @@ class ARMA():
 
 
 class Prophet():
-    def __init__(self, train, n_input=12):
-        self.train = train
+    def __init__(self):
         self.model = None
-        self.period = n_input
+        self.period = None
 
-    def fit(self, X_train, y_train):
-        if 'date' not in self.train.columns:
-            raise "train df should have a 'date' column"
-        df = pd.DataFrame({'ds': self.train.date, 'y': y_train})
-        self.model = fbprophet.Prophet()
+    def fit(self, X_train, y_train, **params):
+        numdays = len(X_train)
+        base = datetime.datetime.today()
+        date_list = [base - datetime.timedelta(days=x) for x in range(numdays)]
+        df = pd.DataFrame({'ds': date_list, 'y': y_train})
+        self.model = fbprophet.Prophet(**params)
         self.model.fit(df)
 
     def predict(self, X_test):
@@ -79,3 +90,21 @@ class Prophet():
         forecast = self.model.predict(future)
         y_pred = forecast.yhat[-self.period:]
         return y_pred.values
+
+    def optimize(
+        self,
+        X_train,
+        X_test,
+        y_train,
+        y_test
+    ):
+        return HyperparametersTuner(
+            model=Prophet,
+            search_space=prophet_space,
+            x0=prophet_x0,
+            metric=metrics.smape_score,
+            X_train=X_train,
+            X_test=X_test,
+            y_train=y_train,
+            y_test=y_test
+        )()

@@ -5,16 +5,16 @@ import time
 from tqdm import tqdm
 import math
 
-from autoforecast.src.utils.utils import *
+from autoforecast.metrics import get_metrics
 from autoforecast.models.models import get_dict_models
 
 
 class AutoForecast():
-    def __init__(self, train, metrics=None):
+    def __init__(self, metrics=None):
         """
         metrics: str, metric to optimize
         """
-        self.dict_models = get_dict_models(train)
+        self.dict_models = get_dict_models()
 
     # custom AutoForecast
     def run_auto_forecast(
@@ -40,9 +40,22 @@ class AutoForecast():
         dict_metrics = {}
         dict_pred = {}
         for model_str, model in tqdm(self.dict_models.items()):
-
+            print(model_str)
             model = model
-            model.fit(X_train, y_train)
+            best_param = {}
+            try:
+                print("start optimize hyperparameters")
+                res_opt, best_param = model.optimize(
+                    X_train=X_train,
+                    X_test=X_test,
+                    y_train=y_train,
+                    y_test=y_test
+                )
+                print(res_opt)
+                print(best_param)
+            except AttributeError as err:
+                print(f'except: {err}')
+            model.fit(X_train, y_train, **best_param)
             y_pred = model.predict(X_test)
             dict_pred[model_str] = y_pred
             if verbose:
@@ -56,6 +69,12 @@ class AutoForecast():
                     'dict_pred': dict_pred
                 }
         # print best models
+        # SMAPE
+        print('Best models according to SMAPE metrics:')
+        dict_metrics_smape = {k: v['smape'] for k, v in dict_metrics.items()}
+        # sorted dict
+        dict_metrics_smape = dict(sorted(dict_metrics_smape.items(), key=lambda item: item[1]))
+        print(dict_metrics_smape)
         # RMSE
         print('Best models according to RMSE metrics:')
         dict_metrics_rmse = {k: v['rmse'] for k, v in dict_metrics.items()}
