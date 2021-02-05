@@ -36,9 +36,6 @@ class Logger:
         self.lowLogVerbosity = []
 
     def clean_message(self, message: str) -> str:
-        if isinstance(message, str):
-            return str(message).replace('\n', ' \r')
-
         return message
 
 

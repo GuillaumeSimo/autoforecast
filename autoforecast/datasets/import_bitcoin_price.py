@@ -6,6 +6,7 @@ from typing import List
 import time
 import asyncio
 from datetime import datetime, timedelta
+from tqdm import tqdm
 
 import pandas as pd
 from aiohttp import ClientSession
@@ -101,7 +102,7 @@ def get_price_for_last_n_days(n=1, type='spot', currency_pair='BTC-USD'):
     prices = []
     jsons = []
     #loop = asyncio.get_event_loop()
-    for i in range(n, -1, -1):
+    for i in tqdm(range(n, -1, -1)):
         date = (datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d')
         dates.append(date)
         jsons.append(_get_current_price_loop(type=type,
