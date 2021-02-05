@@ -34,9 +34,4 @@ def run(verbose: bool = False):
     LOG.debug(f'shapes={X_train.shape}{X_test.shape}{y_train.shape}{y_test.shape}')
     LOG.debug(f'y_pred={y_pred}')
     LOG.debug(f'y_test={y_test}')
-    # main.py
-    """    res_auto_forecast = AutoForecast().run_auto_forecast(
-        X_train, y_train, X_test, y_test,
-        verbose=verbose, max_time_in_sec=600
-    )"""
     LOG.debug('autoforecast_bitcoin.run() ending...')
