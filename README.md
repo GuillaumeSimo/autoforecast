@@ -1,7 +1,7 @@
 # Auto Forecast
 AutoML library for time series forecasting
 
-## Getting started
+## Quick start
 
 Upgrade pip
 ```bash
@@ -14,21 +14,27 @@ $ pip install autoforecast
 ```
 
 
+### Try it out with your own dataset
+```python
+from autoforecast.automl import AutoForecast
+
+
+model = AutoForecast()
+
+print('Autoforecast() model fitting...')
+model.fit(X_train=X_train, y_train=y_train)
+
+print('Autoforecast() model predicting...')
+
+y_pred = model.predict(X_test=X_test)
+print(f'y_pred={y_pred})
+```
+
+
 ### Run the example function
 ```python
 from autoforecast.examples import autoforecast_bitcoin
 
 
-res = autoforecast_bitcoin.run()
-print(res)
-```
-
-### Use you own dataset
-```python
-from autoforecast.automl import AutoForecast
-
-res_auto_forecast = AutoForecast(train).run_auto_forecast(
-    X_train, y_train, X_test, y_test,
-    verbose=False, max_time_in_sec=600
-)
+autoforecast_bitcoin.run()
 ```
