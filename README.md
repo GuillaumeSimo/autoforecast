@@ -22,11 +22,11 @@ $ pip install autoforecast
 ```python
 from Autoforecast.preprocessing import preprocessing
 
-train, test = preprocessing(
+X_train, y_train, X_test, y_test = preprocessing(
     df=df,
-    target_name=['target'],
-    categoricals=['date',...],
-    numericals=['turnover', ...],
+    target_name=['sales'],
+    categoricals=['store_id', 'dpt_id', 'holiday', 'zipcode', ...],
+    numericals=['employee_num', 'store_surface', ...],
     date_col=['date'],
     train_size=0.8,
     engineering=True,
