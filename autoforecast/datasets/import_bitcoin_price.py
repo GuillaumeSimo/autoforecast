@@ -12,6 +12,8 @@ import pandas as pd
 from aiohttp import ClientSession
 import requests
 
+from autoforecast.src.utils.logger import LOG
+
 
 async def _get_current_price(type='buy', currency_pair='BTC-USD', date=None, session=None):
     if date is None:
@@ -21,24 +23,24 @@ async def _get_current_price(type='buy', currency_pair='BTC-USD', date=None, ses
     if currency_pair is not None:
         url = '{}{}/'.format(BASE_URL, currency_pair)
     else:
-        print('Error: currency_pair is None')
+        LOG.error('Error: currency_pair is None')
         sys.exit(1)
     if type in available_type:
         url = '{}{}'.format(url, type)
     else:
-        print('Error: type not available, try {}'.format(available_type))
+        LOG.error('Error: type not available, try {}'.format(available_type))
         sys.exit(1)
     if date is not None:
         url = '{}?date={}'.format(url, date)
     try:
         async with session.get(url) as response:
             if response.status != 200:
-                print('status_code {} for url {}'.format(response.status, url))
+                LOG.error('status_code {} for url {}'.format(response.status, url))
             else:
                 json = response.json()
                 return await json
     except Exception as e:
-        print('Not able to get {}, {}'.format(url, e))
+        LOG.error('Not able to get {}, {}'.format(url, e))
         return {}
 
 
@@ -50,24 +52,24 @@ def _get_current_price_loop(type='buy', currency_pair='BTC-USD', date=None, sess
     if currency_pair is not None:
         url = '{}{}/'.format(BASE_URL, currency_pair)
     else:
-        print('Error: currency_pair is None')
+        LOG.error('Error: currency_pair is None')
         sys.exit(1)
     if type in available_type:
         url = '{}{}'.format(url, type)
     else:
-        print('Error: type not available, try {}'.format(available_type))
+        LOG.error('Error: type not available, try {}'.format(available_type))
         sys.exit(1)
     if date is not None:
         url = '{}?date={}'.format(url, date)
     try:
         response = requests.get(url)
         if response.status_code != 200:
-            print('status_code {} for url {}'.format(response.status_code, url))
+            LOG.error('status_code {} for url {}'.format(response.status_code, url))
         else:
             json = response.json()
             return json
     except Exception as e:
-        print('Not able to get {}, {}'.format(url, e))
+        LOG.error('Not able to get {}, {}'.format(url, e))
         return {}
 
 
@@ -94,9 +96,12 @@ async def future_price(dates: List[str], type, currency_pair) -> object:
 
 
 def get_price_for_last_n_days(n=1, type='spot', currency_pair='BTC-USD'):
-    print('Fetching {} ({}) data for the last {} days...'.format(type,
-                                                                 currency_pair,
-                                                                 n))
+    LOG.debug(
+        'Fetching {} ({}) data for the last {} days...'.format(
+            type,
+            currency_pair,
+            n
+    ))
     start = time.time()
     dates = []
     prices = []
@@ -122,5 +127,5 @@ def get_price_for_last_n_days(n=1, type='spot', currency_pair='BTC-USD'):
     data = pd.DataFrame({'date': dates,
                          'price': prices,
                          'timestamp': [i+1 for i in range(len(dates))]})
-    print('Data fetched in {:.2f} s'.format(time.time() - start))
+    LOG.debug('Data fetched in {:.2f} s'.format(time.time() - start))
     return data

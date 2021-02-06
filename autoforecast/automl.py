@@ -94,7 +94,7 @@ class AutoForecast():
             dict_metrics[model_str] = metrics
             if start-time.time() >= max_time_in_sec:
                 break
-        # print best models
+        # log best models
         # SMAPE
         LOG.debug('Best models according to SMAPE metrics:')
         dict_metrics_smape = {k: v['smape'] for k, v in dict_metrics.items()}
