@@ -17,3 +17,5 @@ def preprocessing(
 ):
     cutoff = int(len(df) * train_size)
     train, test = df[:cutoff], df[cutoff:]
+    X_train, y_train, X_test, y_test = None
+    return X_train, y_train, X_test, y_test
