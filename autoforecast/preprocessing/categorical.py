@@ -25,7 +25,7 @@ def split_date(df, date_col):
     """
     split YYYY-mm-dd date into year, month, day
     """
-    list_date = df.date_col.tolist()
+    list_date = df[date_col].tolist()
     list_year = [int(date[:4]) for date in list_date]
     list_month = [int(date[5:7]) for date in list_date]
     list_day = [int(date[8:]) for date in list_date]
@@ -35,9 +35,10 @@ def split_date(df, date_col):
     return df
  
 
-def run(df, list_cat_feat, date_col): 
-    df = split_date(df, date_col)
-    list_cat_feat += ['year', 'month', 'day']
+def run(df, list_cat_feat, date_col):
+    if date_col:
+        df = split_date(df, date_col)
+        list_cat_feat += ['year', 'month', 'day']
     df, dict_map = encode(data=df, list_col=list_cat_feat)
     list_cat_feat_token = [f'{col}_token' for col in list_cat_feat]
     return df[list_cat_feat_token].values
