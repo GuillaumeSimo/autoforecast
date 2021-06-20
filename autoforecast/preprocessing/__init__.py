@@ -1,6 +1,8 @@
 from typing import List, Optional
 
-from Autoforecast.preprocessing import (
+import pandas as pd
+
+from autoforecast.preprocessing import (
     categorical, engineering, features_selection, numerical
 )
 
@@ -17,5 +19,19 @@ def preprocessing(
 ):
     cutoff = int(len(df) * train_size)
     train, test = df[:cutoff], df[cutoff:]
-    X_train, y_train, X_test, y_test = None
+
+    train_cat, test_cat = categorical.run(
+        df=df, list_cat_feat=categoricals, date_col=date_col
+    )
+    train_num, test_num = numerical.run(df=df, list_num_feat=numericals)
+    #TBD engineering.run()
+    train_concat = pd.concat([train_cat, train_num], axis=1)
+    test_concat = pd.concat([test_cat, test_num], axis=1)
+    train_selected, test_selected = features_selection.run(
+        train_concat, test_concat
+    )
+    X_train = train_selected.drop('target', axis=1).values
+    y_train = train_selected['target'].values
+    X_test = test_selected.drop('target', axis=1).values
+    y_test = test['target'].values
     return X_train, y_train, X_test, y_test
