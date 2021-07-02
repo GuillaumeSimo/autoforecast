@@ -1,0 +1,48 @@
+name: CI
+on: pull_request
+env:
+  CI: true
+
+jobs:
+  flake8-lint:
+    runs-on: ubuntu-latest
+    name: Linter check
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v2
+      - name: Set up Python environment
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+
+      - name: flake8 Lint
+        run: |
+          pip install flake8
+          flake8 .
+
+  back-end-python:
+    runs-on: ubuntu-latest
+    name: Back-end CI - Python 3.8
+
+    steps:
+      - name: checkout sources
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip**/requirements**.txt
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements**.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dev requirements
+        run: make install-dev-requirements
+
+      - name: Run unit tests
+        run: make unit-tests
