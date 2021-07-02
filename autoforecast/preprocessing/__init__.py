@@ -1,11 +1,6 @@
 from typing import List, Optional
 
-from Autoforecast.preprocessing import (
-    categorical,
-    engineering,
-    features_selection,
-    numerical,
-)
+from autoforecast.preprocessing import categorical, engineering, features_selection, numerical
 
 
 def preprocessing(
