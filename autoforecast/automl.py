@@ -1,9 +1,8 @@
 # Forecasting/autoforecast/main.py
-import numpy as np
-import pandas as pd
 import time
+
+import numpy as np
 from tqdm import tqdm
-import math
 
 from autoforecast.metrics import get_metrics
 from autoforecast.models.models import get_dict_models
@@ -95,25 +94,19 @@ class AutoForecast:
         LOG.debug("Best models according to SMAPE metrics:")
         dict_metrics_smape = {k: v["smape"] for k, v in dict_metrics.items()}
         # sorted dict
-        dict_metrics_smape = dict(
-            sorted(dict_metrics_smape.items(), key=lambda item: item[1])
-        )
+        dict_metrics_smape = dict(sorted(dict_metrics_smape.items(), key=lambda item: item[1]))
         LOG.debug(dict_metrics_smape)
         # RMSE
         LOG.debug("Best models according to RMSE metrics:")
         dict_metrics_rmse = {k: v["rmse"] for k, v in dict_metrics.items()}
         # sorted dict
-        dict_metrics_rmse = dict(
-            sorted(dict_metrics_rmse.items(), key=lambda item: item[1])
-        )
+        dict_metrics_rmse = dict(sorted(dict_metrics_rmse.items(), key=lambda item: item[1]))
         LOG.debug(dict_metrics_rmse)
         LOG.debug("Best models according to MAPE metrics:")
         # MAPE
         dict_metrics_mape = {k: v["mape"] for k, v in dict_metrics.items()}
         # sorted dict
-        dict_metrics_mape = dict(
-            sorted(dict_metrics_mape.items(), key=lambda item: item[1])
-        )
+        dict_metrics_mape = dict(sorted(dict_metrics_mape.items(), key=lambda item: item[1]))
         LOG.debug(dict_metrics_mape)
         LOG.debug(f"AutoForecast done in {round(time.time()-start, 2)}s.")
         best_model_str = list(dict_metrics_smape.keys())[0]

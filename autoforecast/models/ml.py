@@ -1,17 +1,5 @@
-from sklearn.ensemble import (
-    RandomForestRegressor,
-    GradientBoostingRegressor,
-    AdaBoostRegressor,
-)
-from sklearn.linear_model import LinearRegression, Ridge, SGDRegressor
-from sklearn.svm import LinearSVR, SVR, NuSVR
-from sklearn.tree import DecisionTreeRegressor, ExtraTreeRegressor
-from sklearn.neural_network import MLPRegressor
-from sklearn.neighbors import KNeighborsRegressor
-import xgboost as xgb
-
-from autoforecast.models.hyperparameters import HyperparametersTuner
 from autoforecast import metrics
+from autoforecast.models.hyperparameters import HyperparametersTuner
 
 
 class BaseMLRegressor:

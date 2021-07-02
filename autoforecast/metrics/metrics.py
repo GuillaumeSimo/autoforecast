@@ -1,5 +1,5 @@
 import numpy as np
-import sklearn.metrics
+from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error
 
 
 def encode(data, col="bank"):
@@ -34,13 +34,6 @@ def smape_score(y_test, y_pred):
         / len(y_test)
         * np.sum(2 * np.abs(y_pred - y_test) / (np.abs(y_test) + np.abs(y_pred)) * 100)
     )
-
-
-from sklearn.metrics import (
-    mean_absolute_percentage_error,
-    mean_absolute_error,
-    mean_squared_error,
-)
 
 
 def get_metrics(y_pred, y_test, y_naive=None):

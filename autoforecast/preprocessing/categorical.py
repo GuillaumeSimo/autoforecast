@@ -1,7 +1,6 @@
 """
 encoding categorical features
 """
-import pandas as pd
 
 
 def encode_one_col(data, col: str):

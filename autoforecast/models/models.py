@@ -1,18 +1,13 @@
-from sklearn.ensemble import (
-    RandomForestRegressor,
-    GradientBoostingRegressor,
-    AdaBoostRegressor,
-)
-from sklearn.linear_model import LinearRegression, Ridge, SGDRegressor
-from sklearn.svm import LinearSVR, SVR, NuSVR
-from sklearn.tree import DecisionTreeRegressor, ExtraTreeRegressor
-from sklearn.neural_network import MLPRegressor
-from sklearn.neighbors import KNeighborsRegressor
 import xgboost as xgb
-
-from autoforecast.models.neural_net import *
-from autoforecast.models.naive import *
-from autoforecast.models.time_series import *
+from autoforecast.models.naive import BaselineLastValue, BaselineMean, BaselineMedian
+from autoforecast.models.neural_net import BaseKeras, LSTMKeras
+from autoforecast.models.time_series import ARMA, Prophet
+from sklearn.ensemble import AdaBoostRegressor, GradientBoostingRegressor, RandomForestRegressor
+from sklearn.linear_model import LinearRegression, Ridge, SGDRegressor
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neural_network import MLPRegressor
+from sklearn.svm import SVR, LinearSVR, NuSVR
+from sklearn.tree import DecisionTreeRegressor, ExtraTreeRegressor
 
 
 def get_dict_models():
@@ -34,7 +29,7 @@ def get_dict_models():
         "MLPRegressor": MLPRegressor(),
         "KNeighborsRegressor": KNeighborsRegressor(),
         "ARMA": ARMA(),
-        #'BaselineLastYear': BaselineLastYear(),
+        #  'BaselineLastYear': BaselineLastYear(),
         "BaselineLastValue": BaselineLastValue(),
         "BaselineMean": BaselineMean(),
         "BaselineMedian": BaselineMedian(),

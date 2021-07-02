@@ -1,18 +1,16 @@
 # Forecasting/autoforecast/src/models/keras_models.py
 import numpy as np
-from keras import Model, models
-from keras.layers import Dense, LSTM, Embedding, Input
-from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
-
-from autoforecast.models.hyperparameters import HyperparametersTuner
-from autoforecast.configs.configspace.neural_net_space import (
-    base_keras_x0,
-    base_keras_space,
-    lstm_keras_x0,
-    lstm_keras_space,
-)
 from autoforecast import metrics
+from autoforecast.configs.configspace.neural_net_space import (
+    base_keras_space,
+    base_keras_x0,
+    lstm_keras_space,
+    lstm_keras_x0,
+)
+from autoforecast.models.hyperparameters import HyperparametersTuner
+from keras import Model
+from keras.layers import LSTM, Dense, Input
 
 
 class BaseKeras:
@@ -25,22 +23,15 @@ class BaseKeras:
             [y_train[i : i + self.n_input] for i in range(len(y_train) - self.n_input)]
         )
         self.y_train = np.array(
-            [
-                y_train[i + 1 : i + self.n_input + 1]
-                for i in range(len(y_train) - self.n_input)
-            ]
+            [y_train[i + 1 : i + self.n_input + 1] for i in range(len(y_train) - self.n_input)]
         )
 
         self.model = self.keras_model(self.n_input, self.n_features, **params)
-        self.model.fit(
-            self.X_train, self.y_train, epochs=10, validation_split=0.1, verbose=0
-        )
+        self.model.fit(self.X_train, self.y_train, epochs=10, validation_split=0.1, verbose=0)
 
     def predict(self, X_test, *args):
         self.n_input = len(X_test)
-        pred_list = self.predict_by_batch(
-            self.model, self.X_train, self.n_input, self.n_features
-        )
+        pred_list = self.predict_by_batch(self.model, self.X_train, self.n_input, self.n_features)
         return pred_list
 
     @staticmethod

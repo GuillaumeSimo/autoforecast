@@ -1,13 +1,13 @@
 # Forecasting/autoforecast/src/models/time_series_models.py
 import datetime
+
+import fbprophet
 import numpy as np
 import pandas as pd
-import fbprophet
 import statsmodels.api as sm
-
-from autoforecast.models.hyperparameters import HyperparametersTuner
-from autoforecast.configs.configspace.time_series_space import prophet_x0, prophet_space
 from autoforecast import metrics
+from autoforecast.configs.configspace.time_series_space import prophet_space, prophet_x0
+from autoforecast.models.hyperparameters import HyperparametersTuner
 
 
 class ARMA:
@@ -22,15 +22,11 @@ class ARMA:
         self.order = self.best_order(aic_matrix)
 
     def predict(self, X_test, *arg):
-        y_pred = self.predict_arma(
-            y_train=self.y_train, nforecast=len(X_test), order=self.order
-        )
+        y_pred = self.predict_arma(y_train=self.y_train, nforecast=len(X_test), order=self.order)
         return y_pred
 
     @staticmethod
-    def build_aic(
-        y_train: np.ndarray, X_train: np.ndarray, p_max=6, q_max=6, p_min=0, q_min=0
-    ):
+    def build_aic(y_train: np.ndarray, X_train: np.ndarray, p_max=6, q_max=6, p_min=0, q_min=0):
         aic_full = pd.DataFrame(np.zeros((6, 6), dtype=float))
         # Iterate over all ARMA(p,q) models with p,q in [0,6]
         for p in range(6):
@@ -44,7 +40,8 @@ class ARMA:
                 try:
                     res = mod.fit(disp=False, maxiter=200)
                     aic_full.iloc[p, q] = res.aic
-                except:
+                except Exception as e:
+                    print(e)
                     aic_full.iloc[p, q] = np.nan
         return aic_full
 

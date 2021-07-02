@@ -1,5 +1,4 @@
 # src/utils/utils.py
-import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
@@ -34,6 +33,5 @@ def prepare_for_training(df, cols_to_drop=["heading_id", "company_id"]):
 
 
 def train_test_split(df):
-    df_ = df.copy()
     train, test = split_n_last_timestep(df, n=12)
     return train, test
