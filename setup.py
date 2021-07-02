@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="autoforecast", # Replace with your own username
+    name="autoforecast",  # Replace with your own username
     version="0.0.9",
     author="Guillaume Simo",
     author_email="guillaume.simo@hotmail.fr",
@@ -18,6 +18,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
-    install_requires=open('requirements.txt', 'r').read().split()
+    python_requires=">=3.6",
+    install_requires=open("requirements.txt", "r").read().split(),
 )

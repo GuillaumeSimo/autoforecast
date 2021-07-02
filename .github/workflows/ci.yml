@@ -1,0 +1,44 @@
+name: CI
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    branches:
+      - main
+      - dev
+env:
+  CI: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: flake8 Lint
+        run: |
+          pip install flake8
+          flake8 .
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip**/requirements**.txt
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements**.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dev requirements
+        run: make install-dev-requirements
+
+      - name: Run unit tests
+        run: make unit-tests
