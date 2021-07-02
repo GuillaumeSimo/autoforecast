@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,7 +30,7 @@ class Logger:
         if os.getenv("DEBUG") is not None:
             return True
 
-        return self.environment not in self.lowLogVerbosity
+        return False
 
     def increase_verbosity(self):
         self.lowLogVerbosity = []
