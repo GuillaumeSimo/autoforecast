@@ -1,4 +1,8 @@
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor
+from sklearn.ensemble import (
+    RandomForestRegressor,
+    GradientBoostingRegressor,
+    AdaBoostRegressor,
+)
 from sklearn.linear_model import LinearRegression, Ridge, SGDRegressor
 from sklearn.svm import LinearSVR, SVR, NuSVR
 from sklearn.tree import DecisionTreeRegressor, ExtraTreeRegressor
@@ -10,7 +14,7 @@ from autoforecast.models.hyperparameters import HyperparametersTuner
 from autoforecast import metrics
 
 
-class BaseMLRegressor():
+class BaseMLRegressor:
     def __init__(self):
         pass
 
@@ -20,13 +24,7 @@ class BaseMLRegressor():
     def predic(self):
         self.model.predict()
 
-    def optimize(
-        self,
-        X_train,
-        X_test,
-        y_train,
-        y_test
-    ):
+    def optimize(self, X_train, X_test, y_train, y_test):
         return HyperparametersTuner(
             model=None,
             search_space=None,
@@ -35,6 +33,5 @@ class BaseMLRegressor():
             X_train=X_train,
             X_test=X_test,
             y_train=y_train,
-            y_test=y_test
+            y_test=y_test,
         )()
-    

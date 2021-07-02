@@ -10,7 +10,7 @@ from autoforecast.models.models import get_dict_models
 from autoforecast.src.utils.logger import LOG
 
 
-class AutoForecast():
+class AutoForecast:
     def __init__(self, metrics=None):
         """
         metrics: str, metric to optimize
@@ -31,12 +31,11 @@ class AutoForecast():
             X_test=X_test_,
             y_test=y_test_,
             verbose=False,
-            max_time_in_sec=360
+            max_time_in_sec=360,
         )
-        self.model = res_auto_forecast['best_model']['model']
-        best_param = res_auto_forecast['best_model']['best_param']
+        self.model = res_auto_forecast["best_model"]["model"]
+        best_param = res_auto_forecast["best_model"]["best_param"]
         self.model.fit(X_train, y_train, **best_param)
-
 
     def predict(self, X_test):
         y_pred = self.model.predict(X_test)
@@ -50,7 +49,7 @@ class AutoForecast():
         X_test: np.ndarray,
         y_test: np.ndarray,
         verbose: bool = False,
-        max_time_in_sec: int = 360
+        max_time_in_sec: int = 360,
     ):
         """
         Args:
@@ -61,7 +60,7 @@ class AutoForecast():
             :verbose: bool = False
             :max_time_in_sec: int = 360
         """
-        LOG.debug('AutoForecast starting...')
+        LOG.debug("AutoForecast starting...")
         start = time.time()
         dict_metrics = {}
         dict_pred = {}
@@ -69,54 +68,57 @@ class AutoForecast():
         for model_str, model in tqdm(self.dict_models.items()):
             LOG.debug(model_str)
             dict_trained_model[model_str] = {}
-            dict_trained_model[model_str]['model'] = model
+            dict_trained_model[model_str]["model"] = model
             best_param = {}
             try:
                 LOG.debug("start optimize hyperparameters")
                 res_opt, best_param = model.optimize(
-                    X_train=X_train,
-                    X_test=X_test,
-                    y_train=y_train,
-                    y_test=y_test
+                    X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test
                 )
                 LOG.debug(res_opt)
                 LOG.debug(best_param)
             except AttributeError as err:
-                LOG.debug(f'except: {err}')
+                LOG.debug(f"except: {err}")
             model.fit(X_train, y_train, **best_param)
-            dict_trained_model[model_str]['best_param'] = best_param
+            dict_trained_model[model_str]["best_param"] = best_param
             y_pred = model.predict(X_test)
             dict_pred[model_str] = y_pred
             if verbose:
                 LOG.debug(model_str)
-                LOG.debug(f'pred={y_pred}')
+                LOG.debug(f"pred={y_pred}")
             metrics = get_metrics(y_test=y_test, y_pred=y_pred)
             dict_metrics[model_str] = metrics
-            if start-time.time() >= max_time_in_sec:
+            if start - time.time() >= max_time_in_sec:
                 break
         # log best models
         # SMAPE
-        LOG.debug('Best models according to SMAPE metrics:')
-        dict_metrics_smape = {k: v['smape'] for k, v in dict_metrics.items()}
+        LOG.debug("Best models according to SMAPE metrics:")
+        dict_metrics_smape = {k: v["smape"] for k, v in dict_metrics.items()}
         # sorted dict
-        dict_metrics_smape = dict(sorted(dict_metrics_smape.items(), key=lambda item: item[1]))
+        dict_metrics_smape = dict(
+            sorted(dict_metrics_smape.items(), key=lambda item: item[1])
+        )
         LOG.debug(dict_metrics_smape)
         # RMSE
-        LOG.debug('Best models according to RMSE metrics:')
-        dict_metrics_rmse = {k: v['rmse'] for k, v in dict_metrics.items()}
+        LOG.debug("Best models according to RMSE metrics:")
+        dict_metrics_rmse = {k: v["rmse"] for k, v in dict_metrics.items()}
         # sorted dict
-        dict_metrics_rmse = dict(sorted(dict_metrics_rmse.items(), key=lambda item: item[1]))
+        dict_metrics_rmse = dict(
+            sorted(dict_metrics_rmse.items(), key=lambda item: item[1])
+        )
         LOG.debug(dict_metrics_rmse)
-        LOG.debug('Best models according to MAPE metrics:')
+        LOG.debug("Best models according to MAPE metrics:")
         # MAPE
-        dict_metrics_mape = {k: v['mape'] for k, v in dict_metrics.items()}
+        dict_metrics_mape = {k: v["mape"] for k, v in dict_metrics.items()}
         # sorted dict
-        dict_metrics_mape = dict(sorted(dict_metrics_mape.items(), key=lambda item: item[1]))
+        dict_metrics_mape = dict(
+            sorted(dict_metrics_mape.items(), key=lambda item: item[1])
+        )
         LOG.debug(dict_metrics_mape)
-        LOG.debug(f'AutoForecast done in {round(time.time()-start, 2)}s.')
+        LOG.debug(f"AutoForecast done in {round(time.time()-start, 2)}s.")
         best_model_str = list(dict_metrics_smape.keys())[0]
         return {
-            'dict_metrics': dict_metrics,
-            'dict_pred': dict_pred,
-            'best_model': dict_trained_model[best_model_str]
+            "dict_metrics": dict_metrics,
+            "dict_pred": dict_pred,
+            "best_model": dict_trained_model[best_model_str],
         }

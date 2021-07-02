@@ -2,9 +2,9 @@ import numpy as np
 import sklearn.metrics
 
 
-def encode(data, col='bank'):
+def encode(data, col="bank"):
     map_col_to_col_id = {col: col_id for col_id, col in enumerate(data[col].unique())}
-    data[f'{col}_token'] = data[col].map(map_col_to_col_id)
+    data[f"{col}_token"] = data[col].map(map_col_to_col_id)
     return data, map_col_to_col_id
 
 
@@ -29,10 +29,18 @@ def smape_score(y_test, y_pred):
     y_pred = np.array(y_pred_)
     if len(y_test) == 0:
         return 0.0
-    return 1/len(y_test) * np.sum(2 * np.abs(y_pred-y_test) / (np.abs(y_test) + np.abs(y_pred))*100)
+    return (
+        1
+        / len(y_test)
+        * np.sum(2 * np.abs(y_pred - y_test) / (np.abs(y_test) + np.abs(y_pred)) * 100)
+    )
 
 
-from sklearn.metrics import mean_absolute_percentage_error, mean_absolute_error, mean_squared_error
+from sklearn.metrics import (
+    mean_absolute_percentage_error,
+    mean_absolute_error,
+    mean_squared_error,
+)
 
 
 def get_metrics(y_pred, y_test, y_naive=None):
@@ -57,5 +65,12 @@ def get_metrics(y_pred, y_test, y_naive=None):
         mae_naive = mae if mae_naive == 0.0 else mae_naive
         if mase is None:
             mase = mae / mae_naive
-    return {'mse': mse, 'rmse': rmse, 'rmsle': rmsle, 'mape': mape,
-            'mae': mae, 'smape': smape, 'mase': mase}
+    return {
+        "mse": mse,
+        "rmse": rmse,
+        "rmsle": rmsle,
+        "mape": mape,
+        "mae": mae,
+        "smape": smape,
+        "mase": mase,
+    }

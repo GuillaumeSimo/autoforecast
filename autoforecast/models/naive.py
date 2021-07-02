@@ -1,8 +1,8 @@
 # Forecasting/autoforecast/src/models/baseline_models.py
-import numpy as  np
+import numpy as np
 
 
-class BaselineLastYear():
+class BaselineLastYear:
     def __init__(self, y_train=None):
         self.y_train = y_train
 
@@ -13,7 +13,7 @@ class BaselineLastYear():
         return np.array(self.y_train[-12:] * len(X_test))
 
 
-class BaselineLastValue():
+class BaselineLastValue:
     def __init__(self, y_train=None):
         self.y_train = y_train
 
@@ -23,8 +23,8 @@ class BaselineLastValue():
     def predict(self, X_test):
         return np.array([self.y_train[-1]] * len(X_test))
 
-    
-class BaselineMean():
+
+class BaselineMean:
     def __init__(self, y_train=None):
         self.y_train = y_train
 
@@ -35,7 +35,7 @@ class BaselineMean():
         return np.array([np.mean(self.y_train)] * len(X_test))
 
 
-class BaselineMedian():
+class BaselineMedian:
     def __init__(self, y_train=None):
         self.y_train = y_train
 

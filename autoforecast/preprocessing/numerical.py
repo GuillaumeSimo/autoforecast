@@ -12,4 +12,4 @@ def scale_transform(train, test=None):
 
 def run(df, list_num_feat):
     train, test, scaler = scale_transform(train=df[list_num_feat])
-    return train, test, scaler 
+    return train, test, scaler
